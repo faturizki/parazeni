@@ -142,6 +142,7 @@ export const ROLE_ROUTE_PATHS = {
     evaluation: '/komandan/evaluation',
     apel: '/komandan/apel',
     logistics: '/komandan/logistics',
+    messages: '/komandan/messages',
   },
   staff_satuan: {
     dashboard: '/staff/dashboard',
@@ -247,15 +248,6 @@ const ROLE_FALLBACK_PATH_MAP: Record<KnownRole, string[]> = {
   field_officer: [ROLE_ROUTE_PATHS.field_officer.dashboard, ROLE_ROUTE_PATHS.field_officer.absensi],
   anggota: [ROLE_ROUTE_PATHS.anggota.dashboard, ROLE_ROUTE_PATHS.anggota.profile],
 };
-
-function humanizeRole(role: string): string {
-  return role
-    .replace(/[_-]+/g, ' ')
-    .split(' ')
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-}
 
 export function normalizeRole(role: string | null | undefined): KnownRole | null {
   if (!role) return null;
@@ -521,32 +513,25 @@ export function getBidangFromJabatan(jabatan?: string): StaffBidang {
 export function getOperationalRoleLabel(user: User | null): string {
   if (!user) return '—';
   const role = normalizeRole(user.role);
-  switch (role) {
-    case 'super_admin':
-    case 'command_level':
-    case 'staff_ops':
-    case 'staff_pers':
-    case 'staff_log':
-    case 'unit_leader':
-    case 'field_officer':
-    case 'anggota':
-      return getRoleDisplayLabel(user.role);
-    case 'komandan': {
-      return getKomandanScopeLabel(user.level_komando);
-    }
-    case 'staff_satuan': {
-      const bidang = getBidangFromJabatan(user.jabatan);
-      const labels: Record<StaffBidang, string> = {
-        s1: 'Staff Bidang S-1 Personel',
-        s3: 'Staff Bidang S-3 Operasional',
-        s4: 'Staff Bidang S-4 Logistik',
-        umum: 'Staff Operasional',
-      };
-      return labels[bidang];
-    }
-    default:
-      return getRoleDisplayLabel(user.role);
+  const rawRole = (user.role ?? '').toString().trim().toLowerCase();
+
+  if (rawRole === 'komandan') {
+    return getKomandanScopeLabel(user.level_komando);
   }
+
+  if (rawRole === 'staff_satuan') {
+    const bidang = getBidangFromJabatan(user.jabatan);
+    const labels: Record<StaffBidang, string> = {
+      s1: 'Staff Bidang S-1 Personel',
+      s3: 'Staff Bidang S-3 Operasional',
+      s4: 'Staff Bidang S-4 Logistik',
+      umum: 'Staff Operasional',
+    };
+    return labels[bidang];
+  }
+
+  if (!role) return '—';
+  return getRoleDisplayLabel(role);
 }
 
 export function canReadDisciplineNotes(user: User | null): boolean {

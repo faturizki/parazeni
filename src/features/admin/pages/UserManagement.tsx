@@ -53,11 +53,12 @@ interface RegistrationFormLink {
 }
 
 function normalizeImportedRole(value: string | undefined): Role {
-  const normalized = normalizeRole(value ?? '') ?? 'prajurit';
-  if (normalized === 'admin_satuan' || normalized === 'komandan' || normalized === 'staff_satuan' || normalized === 'prajurit') {
-    return normalized;
+  const raw = (value ?? '').trim().toLowerCase();
+  if (raw === 'admin_satuan' || raw === 'komandan' || raw === 'staff_satuan' || raw === 'prajurit') {
+    return raw as Role;
   }
-  return 'prajurit';
+  const normalized = normalizeRole(raw) ?? 'prajurit';
+  return normalized as Role;
 }
 
 function splitCsvLine(line: string, delimiter: CsvDelimiter): string[] {
@@ -1253,7 +1254,7 @@ export default function UserManagement() {
                   onChange={(e) => setRegistrationRole(e.target.value as Role)}
                   className="form-control w-full bg-bg-card"
                 >
-                  {ROLE_OPTIONS.filter((opt) => opt.value !== 'admin_satuan').map((option) => (
+                  {ROLE_OPTIONS.filter((opt) => opt.value !== 'super_admin').map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>

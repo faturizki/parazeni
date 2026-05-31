@@ -76,7 +76,7 @@ export function LeaveStatusBadge({ status }: { status: LeaveStatus }) {
 }
 
 export function RoleBadge({ role }: { role: Role }) {
-  const map: Record<Role, { label: string; variant: BadgeVariant }> = {
+  const map: Partial<Record<Role, { label: string; variant: BadgeVariant }>> = {
     super_admin: { label: 'Super Admin',       variant: 'gold' },
     admin_satuan: { label: 'Admin Satuan',      variant: 'info' },
     komandan:    { label: 'Komandan',          variant: 'info' },

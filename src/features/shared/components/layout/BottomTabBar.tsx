@@ -26,7 +26,7 @@ const ADMIN_TABS: BottomTabItem[] = [
   { path: ROLE_ROUTE_PATHS.admin_satuan.settings,      label: 'Setelan',    icon: <Settings size={20} aria-hidden="true" /> },
 ];
 
-const BOTTOM_TABS: Record<Role, BottomTabItem[]> = {
+const BOTTOM_TABS: Partial<Record<Role, BottomTabItem[]>> = {
   super_admin: ADMIN_TABS,
   admin_satuan: ADMIN_TABS,
   komandan: [

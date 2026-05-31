@@ -1,9 +1,0 @@
-name = "zenipara"
-main = "public/_worker.js"
-
-# Build settings are intentionally minimal — adapt to your project build output
-[build]
-command = "npm run build"
-
-[site]
-bucket = "dist"

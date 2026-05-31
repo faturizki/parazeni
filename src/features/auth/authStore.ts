@@ -447,6 +447,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
             user_id: demoUser.id,
             role: (normalizeRole(demoUser.role) ?? demoUser.role) as User['role'],
             satuan_id: null,
+            kompi_id: null,
+            peleton_id: null,
             expires_at: makeSessionExpiry(),
           };
           await saveSession(sessionPayload);
@@ -475,6 +477,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
             user_id: demoUser.id,
             role: (normalizeRole(demoUser.role) ?? demoUser.role) as User['role'],
             satuan_id: null,
+            kompi_id: null,
+            peleton_id: null,
             expires_at: makeSessionExpiry(),
           };
           await saveSession(sessionPayload);

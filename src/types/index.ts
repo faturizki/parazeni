@@ -43,7 +43,14 @@ export type Role =
   | 'staff_log'
   | 'unit_leader'
   | 'field_officer'
-  | 'anggota';
+  | 'anggota'
+  | 'admin_satuan'
+  | 'komandan'
+  | 'staff_satuan'
+  | 'prajurit'
+  | 'admin'
+  | 'staf'
+  | 'guard';
 
 export type LegacyRole =
   | 'admin_satuan'

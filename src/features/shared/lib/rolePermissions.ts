@@ -409,7 +409,7 @@ export function isAnggota(role: string | null | undefined): boolean {
 }
 
 export function isRoleAdmin(role: string | null | undefined): boolean {
-  return isSuperAdmin(role) || normalizeRole(role) === 'admin_satuan';
+  return isSuperAdmin(role);
 }
 
 export function isRoleSuperAdmin(role: string | null | undefined): boolean {
@@ -417,22 +417,15 @@ export function isRoleSuperAdmin(role: string | null | undefined): boolean {
 }
 
 export function isRoleKomandan(role: string | null | undefined): boolean {
-  const normalized = normalizeRole(role);
-  return (
-    normalized === 'command_level' ||
-    normalized === 'unit_leader' ||
-    normalized === 'field_officer' ||
-    normalized === 'komandan'
-  );
+  return isCommandLevel(role) || isUnitLeader(role) || isFieldOfficer(role);
 }
 
 export function isRoleStaff(role: string | null | undefined): boolean {
-  const normalized = normalizeRole(role);
-  return normalized === 'staff_satuan' || isAnyStaff(role);
+  return isAnyStaff(role);
 }
 
 export function isRolePrajurit(role: string | null | undefined): boolean {
-  return isAnggota(role) || normalizeRole(role) === 'prajurit';
+  return isAnggota(role);
 }
 
 export type WriteModule =
@@ -447,7 +440,8 @@ export type WriteModule =
   | 'maintenance'
   | 'bon_logistik'
   | 'documents'
-  | 'audit';
+  | 'audit'
+  | 'shifts';
 
 const WRITE_MODULE_ROLE_MAP: Record<WriteModule, KnownRole[]> = {
   attendance: ['staff_pers', 'field_officer'],
@@ -462,6 +456,7 @@ const WRITE_MODULE_ROLE_MAP: Record<WriteModule, KnownRole[]> = {
   bon_logistik: ['unit_leader', 'staff_log'],
   documents: ['super_admin', 'command_level', 'staff_ops', 'staff_pers', 'staff_log'],
   audit: ['super_admin'],
+  shifts: ['super_admin'],
 };
 
 export function canWrite(user: User | null, module: WriteModule): boolean {

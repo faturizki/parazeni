@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
 import { act } from 'react';
 import type { ReactNode } from 'react';
-import GatePassMonitorPage from '@/features/admin/pages/admin/GatePassMonitorPage';
+import GatePassMonitorPage from '@/features/admin/pages/GatePassMonitorPage';
 import type { GatePass } from '@/types';
 
 vi.mock('@/features/shared/lib/supabase', () => ({

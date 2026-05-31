@@ -292,6 +292,13 @@ export function getRoleAccessDescription(role: string | null | undefined): strin
 }
 
 export function getRoleDefaultPath(role: string | null | undefined): string | null {
+  if (!role) return null;
+  const raw = role.trim().toLowerCase();
+  if (Object.prototype.hasOwnProperty.call(ROLE_ROUTE_PATHS, raw)) {
+    const routeObj = ROLE_ROUTE_PATHS[raw as keyof typeof ROLE_ROUTE_PATHS] as { dashboard?: string };
+    if (routeObj?.dashboard) return routeObj.dashboard;
+  }
+
   const normalized = normalizeRole(role);
   return normalized ? ROLE_DEFAULT_PATH_MAP[normalized] : null;
 }

@@ -41,7 +41,8 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   }
 
   const normalizedUserRole = normalizeRole(userRole);
-  if (!normalizedUserRole || !allowedRoles.includes(normalizedUserRole)) {
+  const isAllowed = normalizedUserRole && allowedRoles.some((role) => normalizeRole(role) === normalizedUserRole);
+  if (!normalizedUserRole || !isAllowed) {
     return <Navigate to={getRoleDefaultPath(userRole) ?? APP_ROUTE_PATHS.login} replace />;
   }
 

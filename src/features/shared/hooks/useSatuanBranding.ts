@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/features/shared/lib/supabase';
 import { readSessionContext } from '@/features/shared/lib/sessionContext';
-import type { SatuanBranding } from '../types';
+import type { SatuanBranding } from '@/types';
 
 export default function useSatuanBranding(satuanIdParam?: string) {
   const [branding, setBranding] = useState<SatuanBranding | null>(null);
@@ -19,9 +19,9 @@ export default function useSatuanBranding(satuanIdParam?: string) {
     setIsLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase.from('satuans').select('branding').eq('id', satuanId).single();
+      const { data, error } = await supabase.from('satuans').select('branding').eq('id', satuanId).single<{ branding: SatuanBranding | null }>();
       if (error) throw error;
-      setBranding((data as any)?.branding ?? null);
+      setBranding(data?.branding ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -44,9 +44,9 @@ export default function useSatuanBranding(satuanIdParam?: string) {
           .update({ branding: newBranding })
           .eq('id', satuanId)
           .select()
-          .single();
+          .single<{ branding: SatuanBranding | null }>();
         if (error) throw error;
-        setBranding((data as any)?.branding ?? null);
+        setBranding(data?.branding ?? null);
         return data;
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));

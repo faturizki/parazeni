@@ -20,16 +20,16 @@ import {
 } from '@/features/shared/components/admin/modals';
 import { useUsers } from '@/features/shared/hooks/useUsers';
 import { useSatuans } from '@/features/shared/hooks/useSatuans';
-import { useUIStore } from '../../store/uiStore';
-import { useAuthStore } from '../../store/authStore';
+import { useUIStore } from '@/store/uiStore';
+import { useAuthStore } from '@/features/auth/authStore';
 import { useDebounce } from '@/features/shared/hooks/useDebounce';
-import { ICONS } from '../../icons';
+import { ICONS } from '@/icons';
 import { supabase } from '@/features/shared/lib/supabase';
 import { notifyDataChanged } from '@/features/shared/lib/dataSync';
 import { ensureSessionContext } from '@/features/shared/lib/api/sessionContext';
 import { ROLE_OPTIONS, getRoleCode, getRoleDisplayLabel, isRoleAdmin, isRoleKomandan, normalizeRole } from '@/features/shared/lib/rolePermissions';
 import { validatePin, validateRoleEditForm, getFirstErrorMessage } from '@/features/shared/lib/validation/personelValidation';
-import type { User, Role, CommandLevel } from '../../types';
+import type { User, Role, CommandLevel } from '@/types';
 
 const PAGE_SIZE = 50;
 const MAX_IMPORT_ROWS = 5000;
@@ -54,9 +54,10 @@ interface RegistrationFormLink {
 
 function normalizeImportedRole(value: string | undefined): Role {
   const normalized = normalizeRole(value ?? '') ?? 'prajurit';
-  return (normalized === 'admin_satuan' || normalized === 'komandan' || normalized === 'staff_satuan' || normalized === 'guard' || normalized === 'prajurit')
-    ? normalized
-    : 'prajurit';
+  if (normalized === 'admin_satuan' || normalized === 'komandan' || normalized === 'staff_satuan' || normalized === 'prajurit') {
+    return normalized;
+  }
+  return 'prajurit';
 }
 
 function splitCsvLine(line: string, delimiter: CsvDelimiter): string[] {
@@ -1252,7 +1253,7 @@ export default function UserManagement() {
                   onChange={(e) => setRegistrationRole(e.target.value as Role)}
                   className="form-control w-full bg-bg-card"
                 >
-                  {ROLE_OPTIONS.filter((opt) => opt.value !== ('admin_satuan' as any)).map((option) => (
+                  {ROLE_OPTIONS.filter((opt) => opt.value !== 'admin_satuan').map((option) => (
                     <option key={option.value} value={option.value}>{option.label}</option>
                   ))}
                 </select>

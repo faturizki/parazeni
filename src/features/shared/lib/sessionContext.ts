@@ -1,4 +1,4 @@
-import type { KaryoSession } from '../types';
+import type { KaryoSession } from '@/types';
 
 const SESSION_CONTEXT_KEY = 'karyo_session_context';
 
@@ -14,8 +14,18 @@ export function readSessionContext(): KaryoSession | null {
   if (!raw) return null;
 
   try {
-    const session = JSON.parse(raw) as KaryoSession;
-    if (!session.user_id || !session.role || !session.expires_at) return null;
+    const parsed = JSON.parse(raw) as Partial<KaryoSession>;
+    if (!parsed.user_id || !parsed.role || !parsed.expires_at) return null;
+
+    const session: KaryoSession = {
+      ...parsed,
+      satuan_id: parsed.satuan_id ?? null,
+      kompi_id: parsed.kompi_id ?? null,
+      peleton_id: parsed.peleton_id ?? null,
+      expires_at: parsed.expires_at,
+      user_id: parsed.user_id,
+      role: parsed.role,
+    };
 
     if (new Date(session.expires_at) < new Date()) {
       clearSessionContext();

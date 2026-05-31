@@ -35,8 +35,29 @@ export interface GatePass {
   user?: User;
 }
 
-export type Role = 'super_admin' | 'admin_satuan' | 'komandan' | 'staff_satuan' | 'prajurit';
+export type Role =
+  | 'super_admin'
+  | 'command_level'
+  | 'staff_ops'
+  | 'staff_pers'
+  | 'staff_log'
+  | 'unit_leader'
+  | 'field_officer'
+  | 'anggota';
+
+export type LegacyRole =
+  | 'admin_satuan'
+  | 'komandan'
+  | 'staff_satuan'
+  | 'prajurit'
+  | 'admin'
+  | 'staf'
+  | 'guard';
+
 export type CommandLevel = 'BATALION' | 'KOMPI' | 'PELETON';
+export type StaffRole = 'staff_ops' | 'staff_pers' | 'staff_log';
+export type CommandRole = 'command_level' | 'unit_leader';
+export type FieldRole = 'field_officer' | 'anggota';
 
 export interface SatuanBranding {
   logo_url?: string;
@@ -76,6 +97,8 @@ export interface User {
   jabatan?: string;
   satuan: string;
   satuan_id?: string;
+  kompi_id?: string;
+  peleton_id?: string;
   foto_url?: string;
   is_active: boolean;
   is_online: boolean;
@@ -401,6 +424,8 @@ export interface KaryoSession {
   user_id: string;
   role: Role;
   satuan_id: string | null;
+  kompi_id: string | null;
+  peleton_id: string | null;
   expires_at: string;
 }
 

@@ -10,10 +10,10 @@ import EmptyState from '@/features/shared/components/common/EmptyState';
 import LoadingSpinner from '@/features/shared/components/common/LoadingSpinner';
 import PageHeader from '@/features/shared/components/ui/PageHeader';
 import { useAnnouncements } from '@/features/shared/hooks/useAnnouncements';
-import { useUIStore } from '../../store/uiStore';
+import { useUIStore } from '@/store/uiStore';
 import { useDebounce } from '@/features/shared/hooks/useDebounce';
 import { getRoleDisplayLabel } from '@/features/shared/lib/rolePermissions';
-import type { Announcement, Role } from '../../types';
+import type { Announcement, Role } from '@/types';
 
 const ANNOUNCEMENT_TARGET_ROLES = ['admin_satuan', 'komandan', 'prajurit'] as const;
 type AnnouncementTargetRole = (typeof ANNOUNCEMENT_TARGET_ROLES)[number];
@@ -44,7 +44,7 @@ export default function Announcements() {
     isi: '',
     target_satuan: '',
     is_pinned: false,
-    target_admin: false,
+    target_admin_satuan: false,
     target_komandan: false,
     target_prajurit: false,
   });
@@ -83,7 +83,7 @@ export default function Announcements() {
 
   // Form handlers
   const resetForm = () => {
-    setForm({ judul: '', isi: '', target_satuan: '', is_pinned: false, target_admin: false, target_komandan: false, target_prajurit: false });
+    setForm({ judul: '', isi: '', target_satuan: '', is_pinned: false, target_admin_satuan: false, target_komandan: false, target_prajurit: false });
     setEditingId(null);
   };
 
@@ -93,7 +93,7 @@ export default function Announcements() {
       isi: ann.isi,
       target_satuan: ann.target_satuan ?? '',
       is_pinned: ann.is_pinned,
-      target_admin: ann.target_role?.includes('admin_satuan') ?? false,
+      target_admin_satuan: ann.target_role?.includes('admin_satuan') ?? false,
       target_komandan: ann.target_role?.includes('komandan') ?? false,
       target_prajurit: ann.target_role?.includes('prajurit') ?? false,
     });
@@ -112,7 +112,7 @@ export default function Announcements() {
       return;
     }
     const targetRole: Role[] = [];
-    if (form.target_admin) targetRole.push('admin_satuan');
+    if (form.target_admin_satuan) targetRole.push('admin_satuan');
     if (form.target_komandan) targetRole.push('komandan');
     if (form.target_prajurit) targetRole.push('prajurit');
 

@@ -9,7 +9,7 @@ import {
   rpcScanPosJagaWithCredentials,
 } from '@/features/shared/lib/api/posJaga';
 import type { PosJaga, ScanPosJagaResult } from '../types';
-import { useAuthStore } from './authStore';
+import { useAuthStore } from '@/features/auth/authStore';
 import { normalizeScannedQrToken } from '../utils/gatepass';
 
 interface PosJagaState {

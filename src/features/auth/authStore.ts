@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { supabase } from '@/features/shared/lib/supabase';
 import { clearSessionContext, readSessionContext, writeSessionContext } from '@/features/shared/lib/sessionContext';
 import { normalizeRole } from '@/features/shared/lib/rolePermissions';
-import type { User, KaryoSession } from '../../types';
+import type { User, KaryoSession } from '@/types';
 
 const SESSION_KEY = 'karyo_session';
 const CRYPTO_KEY_SESSION = 'karyo_session_key';
@@ -173,6 +173,8 @@ interface VerifyUserPinRow {
   user_role: string;
   force_change_pin: boolean;
   satuan_id?: string | null;
+  kompi_id?: string | null;
+  peleton_id?: string | null;
 }
 
 const DEMO_LOGIN_ENABLED = import.meta.env.DEV && import.meta.env.VITE_ENABLE_DEMO_AUTH !== 'false';
@@ -231,7 +233,7 @@ const buildDemoUsers = (): User[] => {
       id: 'demo-guard',
       nrp: '4000001',
       nama: 'Deni Ramadhan',
-      role: 'guard',
+      role: 'prajurit',
       satuan: 'Batalyon 1',
       pangkat: 'Sersan Satu',
       jabatan: 'Pos Jaga Utama',
@@ -343,6 +345,9 @@ async function restoreSessionWithRetry(
       await supabase.rpc('set_session_context', {
         p_user_id: session.user_id,
         p_role: normalizeRole(session.role) ?? session.role,
+        p_satuan_id: session.satuan_id ?? null,
+        p_kompi_id: session.kompi_id ?? null,
+        p_peleton_id: session.peleton_id ?? null,
       });
 
       const { data: userData, error } = await supabase
@@ -490,7 +495,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         throw new Error('NRP atau PIN salah. Periksa kembali dan coba lagi.');
       }
 
-      const { user_id, user_role, force_change_pin, satuan_id } = row;
+      const { user_id, user_role, force_change_pin, satuan_id, kompi_id, peleton_id } = row;
       if (import.meta.env.DEV) console.log('[AUTH] PIN verified for user_id:', user_id);
 
       const normalizedRole = normalizeRole(user_role) ?? user_role;
@@ -498,6 +503,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         p_user_id: user_id,
         p_role: normalizedRole,
         p_satuan_id: satuan_id ?? null,
+        p_kompi_id: kompi_id ?? null,
+        p_peleton_id: peleton_id ?? null,
       });
 
       const { data: userData, error: userError } = await supabase.rpc('get_user_by_id', { p_user_id: user_id }).single();
@@ -532,6 +539,8 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
         user_id,
         role: normalizedRole as User['role'],
         satuan_id: satuan_id ?? null,
+        kompi_id: kompi_id ?? null,
+        peleton_id: peleton_id ?? null,
         expires_at: makeSessionExpiry(),
       };
       await saveSession(sessionPayload);

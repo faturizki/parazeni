@@ -20,6 +20,9 @@ coverage/
 .env
 .env.local
 .env.*.local
+.env.production
+
+# Environment files — jangan commit ke repositori
 
 # logs
 npm-debug.log*

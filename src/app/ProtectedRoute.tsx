@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '@/features/auth/authStore';
 import { useFeatureStore } from '../store/featureStore';
 import { isPathEnabled } from '@/features/shared/lib/featureFlags';
-import { APP_ROUTE_PATHS, getRoleDefaultPath, getRoleFallbackPaths } from '@/features/shared/lib/rolePermissions';
+import { APP_ROUTE_PATHS, getRoleDefaultPath, getRoleFallbackPaths, isRoleSuperAdmin, normalizeRole } from '@/features/shared/lib/rolePermissions';
 import LoadingSpinner from '@/features/shared/components/common/LoadingSpinner';
-import type { Role } from '../types';
+import type { Role } from '@/types';
 
 interface ProtectedRouteProps {
   allowedRoles: readonly Role[];
@@ -40,12 +40,19 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
     return <Navigate to={APP_ROUTE_PATHS.login} replace />;
   }
 
-  if (!allowedRoles.includes(userRole)) {
+  const normalizedUserRole = normalizeRole(userRole);
+  if (!normalizedUserRole || !allowedRoles.includes(normalizedUserRole)) {
     return <Navigate to={getRoleDefaultPath(userRole) ?? APP_ROUTE_PATHS.login} replace />;
   }
 
-  if (userRole !== 'super_admin' && !userSatuanId) {
-    return <Navigate to="/error" state={{ code: '403', message: 'Akun belum terdaftar di satuan manapun.' }} replace />;
+  if (!isRoleSuperAdmin(userRole) && !userSatuanId) {
+    return (
+      <Navigate
+        to="/error"
+        state={{ code: '403', message: 'Akun belum terdaftar di satuan manapun.' }}
+        replace
+      />
+    );
   }
 
   if (requiresPinChange && pathname !== APP_ROUTE_PATHS.forceChangePin) {

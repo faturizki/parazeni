@@ -1,15 +1,15 @@
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, CheckSquare, CalendarDays, Megaphone,
-  UserCheck, Users, Settings, ScanLine, ScrollText,
+  UserCheck, Users, Settings, ScanLine,
 } from 'lucide-react';
-import { useAuthStore } from '../../store/authStore';
-import { useFeatureStore } from '../../store/featureStore';
-import { useUIStore } from '../../store/uiStore';
+import { useAuthStore } from '@/features/auth/authStore';
+import { useFeatureStore } from '@/store/featureStore';
+import { useUIStore } from '@/store/uiStore';
 import { useMessages } from '@/features/shared/hooks/useMessages';
 import { isPathEnabled } from '@/features/shared/lib/featureFlags';
 import { ROLE_ROUTE_PATHS } from '@/features/shared/lib/rolePermissions';
-import type { Role } from '../../types';
+import type { Role } from '@/types';
 
 interface BottomTabItem {
   path: string;
@@ -27,7 +27,6 @@ const ADMIN_TABS: BottomTabItem[] = [
 ];
 
 const BOTTOM_TABS: Record<Role, BottomTabItem[]> = {
-  admin: ADMIN_TABS,
   super_admin: ADMIN_TABS,
   admin_satuan: ADMIN_TABS,
   komandan: [
@@ -44,12 +43,8 @@ const BOTTOM_TABS: Record<Role, BottomTabItem[]> = {
     { path: ROLE_ROUTE_PATHS.prajurit.attendance, label: 'Absensi',   icon: <CalendarDays size={20} aria-hidden="true" /> },
     { path: ROLE_ROUTE_PATHS.prajurit.profile,    label: 'Profil',    icon: <UserCheck size={20} aria-hidden="true" /> },
   ],
-  guard: [
-    { path: ROLE_ROUTE_PATHS.guard.gatePassScan, label: 'Scan',     icon: <CheckSquare size={20} aria-hidden="true" /> },
-    { path: ROLE_ROUTE_PATHS.guard.discipline,   label: 'Disiplin', icon: <ScrollText  size={20} aria-hidden="true" /> },
-  ],
   // Staff Operasional
-  staf: [
+  staff_satuan: [
     { path: ROLE_ROUTE_PATHS.staff_satuan.dashboard,      label: 'Beranda',  icon: <LayoutDashboard size={20} aria-hidden="true" /> },
     { path: ROLE_ROUTE_PATHS.admin_satuan.users,         label: 'Personel', icon: <Users size={20} aria-hidden="true" /> },
     { path: ROLE_ROUTE_PATHS.admin_satuan.attendance,    label: 'Absensi',  icon: <CalendarDays size={20} aria-hidden="true" /> },

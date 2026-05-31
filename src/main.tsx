@@ -8,7 +8,7 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import './index.css';
 import { router } from './app/router';
-import { useAuthStore } from './store/authStore';
+import { useAuthStore } from './features/auth/authStore';
 import { usePlatformStore } from './store/platformStore';
 import { useFeatureStore } from './store/featureStore';
 import { useUIStore } from './store/uiStore';

@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { fetchGatePassesByUser, fetchAllGatePasses, fetchGatePassByQrToken, insertGatePass, patchGatePassStatus, rpcScanGatePass, type InsertGatePassResponse } from '@/features/shared/lib/api/gatepass';
 import { GatePass, GatePassStatus } from '../types';
-import { isRoleAdmin, isRoleGuard, isRolePrajurit } from '@/features/shared/lib/rolePermissions';
+import { isRoleAdmin, isRolePrajurit } from '@/features/shared/lib/rolePermissions';
 import { generateQrToken, normalizeScannedQrToken } from '../utils/gatepass';
-import { useAuthStore } from './authStore';
+import { useAuthStore } from '@/features/auth/authStore';
 import { notifyDataChanged } from '@/features/shared/lib/dataSync';
 
 interface GatePassState {
@@ -101,8 +101,8 @@ export const useGatePassStore = create<GatePassState>()((set, get) => ({
     }
 
     gatePassFetchInFlight = (async () => {
-      // Admin, komandan, dan guard perlu melihat semua gate pass (untuk monitoring &
-      // approval). Prajurit hanya perlu melihat gate pass milik sendiri.
+      // Admin dan komandan perlu melihat semua gate pass (untuk monitoring & approval).
+      // Prajurit hanya perlu melihat gate pass milik sendiri.
       const data =
         isRolePrajurit(user.role)
           ? await fetchGatePassesByUser(user.id, user.role, user.id)
@@ -206,8 +206,8 @@ export const useGatePassStore = create<GatePassState>()((set, get) => ({
 
   async scanGatePass(qrToken) {
     const user = useAuthStore.getState().user;
-    if (!user || (!isRoleGuard(user.role) && !isRoleAdmin(user.role))) {
-      throw new Error('Akses hanya untuk petugas jaga');
+    if (!user || !isRoleAdmin(user.role)) {
+      throw new Error('Akses hanya untuk petugas yang memiliki otorisasi scan');
     }
     const normalizedToken = normalizeScannedQrToken(qrToken);
     await rpcScanGatePass(user.id, user.role, normalizedToken);

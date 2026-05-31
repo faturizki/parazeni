@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Shield, Zap, Users, BarChart3, Lock } from 'lucide-react';
-import { useAuthStore } from '../store/authStore';
+import { useAuthStore } from '@/features/auth/authStore';
 import { APP_ROUTE_PATHS, getRoleDefaultPath } from '@/features/shared/lib/rolePermissions';
-import { usePlatformStore } from '../store/platformStore';
+import { usePlatformStore } from '@/store/platformStore';
 
 export default function Landing() {
   const { isAuthenticated, user } = useAuthStore();

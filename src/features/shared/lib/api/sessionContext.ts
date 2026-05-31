@@ -23,6 +23,9 @@ export async function ensureStoredSessionContext(): Promise<void> {
   const { error } = await supabase.rpc('set_session_context', {
     p_user_id: session.user_id,
     p_role: session.role,
+    p_satuan_id: session.satuan_id ?? null,
+    p_kompi_id: session.kompi_id ?? null,
+    p_peleton_id: session.peleton_id ?? null,
   });
 
   if (error) throw error;

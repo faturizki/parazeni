@@ -89,7 +89,7 @@ Workflow akan:
 5. salin `public/404.html` ke `dist/404.html`
 6. upload artifact ke Pages
 
-Untuk menjalankan deploy manual, push ke branch `main` atau gunakan `workflow_dispatch` pada halaman Actions.
+Untuk menjalankan deploy manual, push ke branch `main` atau `refactor/restructure`, atau gunakan `workflow_dispatch` pada halaman Actions.
 
 ## GitHub Actions secrets
 
